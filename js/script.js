@@ -560,11 +560,7 @@ const handleSend = () => {
         addComment(text, true);
         commentInput.value = '';
 
-        // Simulate Reply after 2 seconds (Just for fun demo)
-        setTimeout(() => {
-            const replies = ["Oke siap!", "Barang sudah ready?", "Jangan lupa struknya ya.", "Mantap!"];
-            addComment(replies[Math.floor(Math.random() * replies.length)], false);
-        }, 2000);
+
     }
 };
 

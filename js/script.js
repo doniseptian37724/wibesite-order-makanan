@@ -477,3 +477,103 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
+
+
+// --- Comments/Chat Feature ---
+const commentBtn = document.querySelector('.fa-comment');
+const commentsModal = document.getElementById('comments-modal');
+const closeComments = document.getElementById('close-comments');
+const commentsList = document.getElementById('comments-list');
+const commentInput = document.getElementById('comment-input');
+const sendCommentBtn = document.getElementById('send-comment');
+
+const getCommentsKey = () => 'ngedoni_comments';
+
+// Dummy Names for 'Others' (Simulated)
+const randomNames = ["Admin", "Sales", "Budi", "Siti"];
+
+const renderComments = () => {
+    const comments = JSON.parse(localStorage.getItem(getCommentsKey()) || '[]');
+    commentsList.innerHTML = '';
+
+    if (comments.length === 0) {
+        commentsList.innerHTML = '<div class="empty-state">Belum ada komentar. Yuk mulai ngobrol!</div>';
+        return;
+    }
+
+    comments.forEach(c => {
+        const div = document.createElement('div');
+        div.className = `comment-bubble ${c.isMe ? 'my-comment' : ''}`;
+
+        div.innerHTML = `
+            <div class="comment-name">${c.name}</div>
+            <div class="comment-text">${c.text}</div>
+            <div class="comment-time">${c.time}</div>
+        `;
+        commentsList.appendChild(div);
+    });
+
+    // Scroll to bottom
+    commentsList.scrollTop = commentsList.scrollHeight;
+};
+
+const addComment = (text, isMe = true) => {
+    const comments = JSON.parse(localStorage.getItem(getCommentsKey()) || '[]');
+    const now = new Date();
+    const timeString = `${now.getHours()}:${now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes()}`;
+
+    const newComment = {
+        name: isMe ? "Saya" : randomNames[Math.floor(Math.random() * randomNames.length)],
+        text: text,
+        time: timeString,
+        isMe: isMe
+    };
+
+    comments.push(newComment);
+    localStorage.setItem(getCommentsKey(), JSON.stringify(comments));
+    renderComments();
+};
+
+if (commentBtn) {
+    commentBtn.addEventListener('click', () => {
+        commentsModal.style.display = 'flex';
+        renderComments();
+    });
+}
+
+if (closeComments) {
+    closeComments.addEventListener('click', () => {
+        commentsModal.style.display = 'none';
+    });
+}
+
+// Close on outside click
+window.addEventListener('click', (e) => {
+    if (e.target === commentsModal) {
+        commentsModal.style.display = 'none';
+    }
+});
+
+const handleSend = () => {
+    const text = commentInput.value.trim();
+    if (text) {
+        addComment(text, true);
+        commentInput.value = '';
+
+        // Simulate Reply after 2 seconds (Just for fun demo)
+        setTimeout(() => {
+            const replies = ["Oke siap!", "Barang sudah ready?", "Jangan lupa struknya ya.", "Mantap!"];
+            addComment(replies[Math.floor(Math.random() * replies.length)], false);
+        }, 2000);
+    }
+};
+
+if (sendCommentBtn) {
+    sendCommentBtn.addEventListener('click', handleSend);
+}
+
+if (commentInput) {
+    commentInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSend();
+    });
+}

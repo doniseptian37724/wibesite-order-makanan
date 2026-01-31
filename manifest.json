@@ -1,0 +1,20 @@
+{
+  "name": "Ngedoni App",
+  "short_name": "Ngedoni",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#79a389",
+  "theme_color": "#79a389",
+  "icons": [
+    {
+      "src": "./giphy.gif",
+      "sizes": "192x192",
+      "type": "image/gif"
+    },
+    {
+      "src": "./giphy.gif",
+      "sizes": "512x512",
+      "type": "image/gif"
+    }
+  ]
+}

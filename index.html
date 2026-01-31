@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGEDONI</title>
+    <!-- Google Fonts: Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- Screen 1: Login / Welcome -->
+        <!-- Screen 1: Login / Welcome removed -->
+
+        <!-- Screen 2: Task Sheet / Create Task -->
+        <div class="mobile-screen screen-dashboard">
+            <div class="dashboard-top">
+                <div class="top-header">
+                    <h2>Tugas Doni</h2>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <button id="theme-toggle" class="theme-toggle-btn" style="position:static;"><i
+                                class="fas fa-moon"></i></button>
+                        <div class="profile-icon"><img src="giphy.gif" alt="Profile"></div>
+                    </div>
+                </div>
+
+                <div class="date-selector">
+                    <!-- Hardcoded for visual match, logic can be added later -->
+                    <div class="date-item"><span>23</span><span>Sun</span></div>
+                    <div class="date-item"><span>24</span><span>Mon</span></div>
+                    <div class="date-item active"><span>25</span><span>Tue</span></div>
+                    <div class="date-item"><span>26</span><span>Wed</span></div>
+                    <div class="date-item"><span>27</span><span>Thu</span></div>
+                </div>
+                <div class="month-label">December 2026</div>
+
+                <div class="search-bar" style="position:relative;">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Cari riwayat pesanan...">
+                    <div id="search-suggestions" class="search-suggestions"></div>
+                </div>
+            </div>
+
+            <div class="dashboard-bottom">
+                <h3>Buat Tugas Baru</h3>
+                <form id="create-task-form">
+                    <div class="form-group">
+                        <label>Nama</label>
+                        <input type="text" id="task-name" placeholder="Masukkan Nama Anda" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Harga (Estimasi)</label>
+                        <input type="number" id="task-price" placeholder="Contoh: 15000" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mau beli apa</label>
+                        <input type="text" id="task-category" placeholder="Barang yang ingin dibeli" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Foto Barang (Opsional)</label>
+                        <div class="image-upload-container">
+                            <input type="file" id="task-image" accept="image/*" hidden>
+                            <div class="upload-btn" id="upload-btn-trigger">
+                                <i class="fas fa-camera"></i>
+                                <span>Tambah Foto</span>
+                            </div>
+                            <div id="image-preview" class="image-preview" style="display:none;">
+                                <img id="preview-img" src="" alt="Preview">
+                                <button type="button" id="remove-image"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tanggal</label>
+                        <div class="date-input-row">
+                            <span>25 th December 2026</span>
+                            <i class="fas fa-th-large"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label>Waktu Mulai</label>
+                            <input type="text" id="start-time" value="02:30 PM">
+                        </div>
+                        <div class="form-group half">
+                            <label>Waktu Selesai</label>
+                            <input type="text" id="end-time" value="06:30 PM">
+                        </div>
+                    </div>
+
+                    <!-- Bottom Navigation (Moved here) -->
+                    <div class="bottom-nav"
+                        style="margin-top: 1.5rem; margin-bottom: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 1rem;">
+                        <i class="far fa-heart"></i>
+                        <i class="far fa-comment"></i>
+                        <i class="far fa-user"></i>
+                        <i class="fas fa-paper-plane"></i> <!-- Send Icon updated -->
+                        <i class="fas fa-home"></i>
+                    </div>
+
+                    <button type="submit" class="btn-submit-task" style="display:none;">Submit</button>
+                    <!-- Hidden submit for JS -->
+
+                    <!-- History Section -->
+                    <div class="history-section">
+                        <div class="history-header">
+                            <h4>Riwayat Pesanan</h4>
+                            <div class="history-toggles">
+                                <span class="toggle-btn active" id="view-daily">Harian</span>
+                                <span class="toggle-btn" id="view-all">Semua</span>
+                            </div>
+                        </div>
+                        <div class="subtitle-date" id="history-date-label"></div>
+
+                        <div class="history-list" id="history-list">
+                            <!-- History items will appear here -->
+                            <div class="empty-state">Belum ada pesanan.</div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast-box" class="toast-box"></div>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,796 @@
+:root {
+    --bg-app: #79a389;
+    /* Green default */
+    --orange-theme: #fcb97d;
+    /* Peach/Orange */
+    --purple-theme: #6a62d2;
+    /* Violet */
+    --purple-light: #7c73e6;
+    --white: #ffffff;
+    --text-dark: #333;
+    --text-white: #fff;
+    --font-main: 'Montserrat', sans-serif;
+    --radius-screen: 30px;
+    --radius-input: 10px;
+}
+
+/* Dark Mode Variables Override */
+body.dark-mode {
+    --bg-app: #1a1a1a;
+    --orange-theme: #d35400;
+    /* Darker Orange */
+    --purple-theme: #2c3e50;
+    /* Dark Blue-Grey */
+    --white: #2d3436;
+    /* Dark Grey for Cards */
+    --text-dark: #ecf0f1;
+    /* Light Text */
+}
+
+/* Specific overrides for Dark Mode readability */
+body.dark-mode .date-item {
+    background: #34495e;
+    color: #ecf0f1;
+}
+
+body.dark-mode .date-item.active {
+    background: #e67e22;
+    /* Orange accent for active date */
+    color: #fff;
+}
+
+body.dark-mode .bottom-nav {
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .bottom-nav i {
+    color: #ecf0f1;
+}
+
+body.dark-mode #create-task-form input {
+    color: #ecf0f1;
+}
+
+body.dark-mode #create-task-form .form-group {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .history-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-left-color: #e67e22;
+}
+
+body.dark-mode .history-header h4,
+body.dark-mode .subtitle-date,
+body.dark-mode .input-group label {
+    color: #ecf0f1;
+}
+
+body.dark-mode .app-container {
+    background: #121212;
+    /* Very dark background for screen container if visible */
+}
+
+/* Floating Toggle Button */
+.theme-toggle-btn {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: rotate(30deg);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-app);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 0;
+}
+
+.app-container {
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* --- Mobile Screen Container --- */
+.mobile-screen {
+    width: 100%;
+    /* Fill width */
+    min-height: 100vh;
+    /* Fill height */
+    background: var(--white);
+    border-radius: 0;
+    /* Remove rounding for full screen */
+    box-shadow: none;
+    /* Remove shadow for flat look */
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ================= SCREEN 1: LOGIN ================= */
+.screen-login {
+    background: var(--white);
+}
+
+.screen-top {
+    padding: 2rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-text {
+    margin-bottom: 1rem;
+}
+
+.subtitle {
+    color: #888;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+.header-text h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #2c3e50;
+}
+
+.illustration {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+.illustration img {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+}
+
+.screen-bottom {
+    background-color: var(--orange-theme);
+    padding: 0 2rem 2rem 2rem;
+    height: 40%;
+    /* Approximate */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 20;
+    margin-top: -50px;
+    /* Overlap with curve */
+    padding-top: 60px;
+}
+
+.screen-bottom-curve {
+    position: relative;
+    top: 5px;
+    /* Adjust smooth connection */
+    z-index: 15;
+}
+
+.screen-bottom-curve svg {
+    display: block;
+    width: 100%;
+    height: 80px;
+}
+
+.screen-bottom h3 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.input-group {
+    background: var(--white);
+    border-radius: var(--radius-input);
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.8rem;
+    border: 1px solid transparent;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--orange-theme);
+    margin-bottom: 2px;
+}
+
+.input-group input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+}
+
+.btn-signin {
+    background: #333;
+    /* Dark button */
+    color: var(--white);
+    border: none;
+    padding: 1rem;
+    width: 100%;
+    border-radius: 25px;
+    /* Pill shape */
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.7rem;
+}
+
+.form-footer a {
+    color: #000;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+/* ================= SCREEN 2: DASHBOARD ================= */
+.screen-dashboard {
+    background: var(--orange-theme);
+}
+
+.dashboard-top {
+    padding: 2rem;
+    color: var(--white);
+}
+
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.profile-icon {
+    width: 35px;
+    height: 35px;
+    background: #ecf0f1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dark);
+    overflow: hidden;
+}
+
+.profile-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.date-selector {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.date-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--white);
+    color: var(--orange-theme);
+    padding: 0.5rem 0.6rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.date-item.active {
+    background: var(--purple-theme);
+    color: var(--white);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.month-label {
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.search-bar {
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--white);
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.search-bar input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--white);
+    font-family: inherit;
+    font-size: 0.8rem;
+}
+
+.search-bar i {
+    color: var(--white);
+    font-size: 0.8rem;
+}
+
+.search-bar ::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.dashboard-bottom {
+    flex: 1;
+    background: var(--purple-theme);
+    border-radius: 30px 30px 0 0;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    color: var(--white);
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    -ms-overflow-style: none;
+    /* Hide scrollbar IE/Edge */
+    scrollbar-width: none;
+    /* Hide scrollbar Firefox */
+}
+
+.dashboard-bottom::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar Chrome/Safari */
+}
+
+.dashboard-bottom h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+/* Create Task Form Styles */
+#create-task-form .form-group {
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 1.2rem;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    padding: 10px 15px;
+}
+
+#create-task-form label {
+    display: block;
+    font-size: 0.7rem;
+    margin-bottom: 0.3rem;
+    opacity: 0.9;
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    background: var(--purple-theme);
+    padding: 0 5px;
+}
+
+#create-task-form input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--white);
+    outline: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.date-input-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-row .half {
+    flex: 1;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+    /* Prevent shrinking */
+}
+
+.bottom-nav i {
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.3s;
+}
+
+.bottom-nav i:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+/* History Section */
+.history-section {
+    margin-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 1rem;
+    /* Removed max-height/overflow so it flows with dashboard-bottom scroll */
+}
+
+.history-section h4 {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    max-height: 250px;
+    /* Limit height for internal scrolling */
+    overflow-y: auto;
+    /* Enable scroll */
+    padding-right: 5px;
+    /* Space for scrollbar */
+}
+
+/* Scrollbar styling for history list directly */
+.history-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+/* Search Suggestions Dropdown */
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--white);
+    color: var(--text-dark);
+    border-radius: 10px;
+    margin-top: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    /* Hidden by default */
+}
+
+.suggestion-item {
+    padding: 10px 15px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background-color: #f5f5f5;
+    color: var(--purple-theme);
+}
+
+.history-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.8rem;
+    border-radius: 10px;
+    border-left: 4px solid var(--orange-theme);
+    animation: slideIn 0.3s;
+}
+
+.history-item-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.time-stamp {
+    font-size: 0.7rem;
+    opacity: 0.7;
+}
+
+.item-desc {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.empty-state {
+    text-align: center;
+    font-size: 0.8rem;
+    opacity: 0.6;
+    padding: 1rem;
+    font-style: italic;
+}
+
+/* Custom Scrollbar for history */
+.history-section::-webkit-scrollbar {
+    width: 4px;
+}
+
+.history-section::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+/* Responsive for Mobile Devices (Real) */
+@media (max-width: 800px) {
+    body {
+        padding: 0;
+        align-items: flex-start;
+        background: var(--text-dark);
+        /* Dark bg on mobile to focus on screens */
+    }
+
+    .app-container {
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+    }
+
+    .mobile-screen {
+        width: 100%;
+        border-radius: 0;
+        height: auto;
+        min-height: 100vh;
+        margin-bottom: 2rem;
+    }
+}
+
+/* History Header & Toggles */
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.history-header h4 {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.history-toggles {
+    display: flex;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 2px;
+}
+
+.toggle-btn {
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    border-radius: 10px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: 0.3s;
+}
+
+.toggle-btn.active {
+    background: var(--white);
+    color: var(--purple-theme);
+    opacity: 1;
+    font-weight: 600;
+}
+
+.subtitle-date {
+    font-size: 0.7rem;
+    opacity: 0.7;
+    margin-bottom: 1rem;
+    text-align: right;
+    min-height: 1em;
+}
+
+/* Image Upload Styles */
+.image-upload-container {
+    margin-top: 10px;
+}
+
+.upload-btn {
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.upload-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--white);
+    border-color: var(--white);
+}
+
+.image-preview {
+    position: relative;
+    margin-top: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    max-height: 200px;
+}
+
+.image-preview img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+#remove-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+/* Custom Toast Notification */
+.toast-box {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 15px 25px;
+    border-radius: 50px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    transition: top 0.5s ease-in-out;
+    min-width: 300px;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.toast-box.show {
+    top: 20px;
+}
+
+.toast-box i {
+    color: #4cd137;
+    /* Green for success */
+    font-size: 1.2rem;
+}
+
+.toast-box.error i {
+    color: #e84118;
+    /* Red for error */
+}
+
+/* Delete Button in History */
+.delete-btn {
+    opacity: 0.5;
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 5px;
+    color: #e84118;
+    transition: 0.3s;
+    margin-left: 10px;
+}
+
+.delete-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Checklist / Done State */
+.history-item.done {
+    opacity: 0.6;
+    background: rgba(0, 0, 0, 0.05);
+    /* Greyed out */
+}
+
+.history-item.done .history-item-top span {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.history-item {
+    cursor: pointer;
+    /* Clickable now */
+    transition: 0.2s;
+}
+
+.history-item:hover {
+    transform: scale(1.01);
+}
+
+/* Price Tag Style */
+.price-tag {
+    background: var(--purple-theme);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin-left: auto;
+    /* Push to right */
+    margin-right: 10px;
+}
+
+/* Total Price Display */
+.total-price-display {
+    text-align: right;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--white);
+    font-size: 0.9rem;
+    padding-right: 5px;
+}

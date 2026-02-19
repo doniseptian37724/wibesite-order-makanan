@@ -1,0 +1,215 @@
+{
+  "info": {
+    "name": "Anti Gravity - Food Order API",
+    "description": "API collection for Anti Gravity food ordering application",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/v1"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/health",
+            "header": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "Menus",
+      "item": [
+        {
+          "name": "Get All Menus",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/menus",
+              "query": [
+                {
+                  "key": "category",
+                  "value": "Makanan",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Menu Categories",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/menus/categories"
+          }
+        },
+        {
+          "name": "Get Menu By ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/menus/:id"
+          }
+        },
+        {
+          "name": "Create Menu (Admin)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/menus",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"menu_name\": \"Nasi Uduk\",\n  \"menu_price\": 15000,\n  \"menu_category\": \"Makanan\",\n  \"menu_description\": \"Nasi uduk dengan lauk lengkap\",\n  \"menu_is_available\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Menu (Admin)",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/menus/:id",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"menu_price\": 18000\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Menu (Admin)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/menus/:id",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order (Customer)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/orders",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_customer_name\": \"Doni\",\n  \"order_customer_phone\": \"081234567890\",\n  \"order_notes\": \"Tidak pakai pedas\",\n  \"items\": [\n    {\n      \"menu_id\": \"<menu_uuid>\",\n      \"quantity\": 2,\n      \"item_notes\": \"Extra nasi\"\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Order By Code",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/orders/code/:code"
+          }
+        },
+        {
+          "name": "Get All Orders (Admin)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/orders?page=1&limit=20",
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "disabled": true
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Get Order By ID (Admin)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/orders/:id",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Update Order Status (Admin)",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/orders/:id/status",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_status\": \"confirmed\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

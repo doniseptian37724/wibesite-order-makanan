@@ -1,168 +1,280 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>NGEDONI App</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NGEDONI</title>
-    <!-- Google Fonts: Montserrat -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css">
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- FontAwesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
     <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-</head>
+    <link rel="manifest" href="manifest.json" />
 
-<body>
-
+    <!-- SEO & Open Graph -->
+    <meta
+      name="description"
+      content="Ngedoni - The best food delivery app in town. Order salads, snacks, and more!"
+    />
+    <meta property="og:title" content="NGEDONI - Food Delivery" />
+    <meta
+      property="og:description"
+      content="Order your favorite food with Ngedoni. Fresh, fast, and delicious."
+    />
+    <meta property="og:image" content="giphy.gif" />
+    <meta
+      property="og:url"
+      content="https://doniseptian37724.github.io/ngedoni/"
+    />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
     <div class="app-container">
+      <!-- === HOME SCREEN === -->
+      <div id="screen-home">
+        <!-- Header -->
+        <header class="header">
+          <i class="fas fa-bars menu-btn"></i>
+          <i class="fas fa-search search-btn-header" style="opacity: 0"></i>
+          <!-- Hidden for layout balance -->
+        </header>
 
-        <!-- Screen 1: Login / Welcome -->
-        <!-- Screen 1: Login / Welcome removed -->
+        <!-- Hero Text -->
+        <section class="hero-text">
+          <h1>
+            Get Your <span>Best<br />Food</span> Around You
+          </h1>
+        </section>
 
-        <!-- Screen 2: Task Sheet / Create Task -->
-        <div class="mobile-screen screen-dashboard">
-            <div class="dashboard-top">
-                <div class="top-header">
-                    <h2>Tugas Doni</h2>
-                    <div style="display:flex; gap:10px; align-items:center;">
-                        <button id="theme-toggle" class="theme-toggle-btn" style="position:static;"><i
-                                class="fas fa-moon"></i></button>
-                        <div class="profile-icon"><img src="giphy.gif" alt="Profile"></div>
-                    </div>
-                </div>
-
-                <div class="date-selector">
-                    <!-- Hardcoded for visual match, logic can be added later -->
-                    <div class="date-item"><span>23</span><span>Sun</span></div>
-                    <div class="date-item"><span>24</span><span>Mon</span></div>
-                    <div class="date-item active"><span>25</span><span>Tue</span></div>
-                    <div class="date-item"><span>26</span><span>Wed</span></div>
-                    <div class="date-item"><span>27</span><span>Thu</span></div>
-                </div>
-                <div class="month-label">December 2026</div>
-
-                <div class="search-bar" style="position:relative;">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="search-input" placeholder="Cari riwayat pesanan...">
-                    <div id="search-suggestions" class="search-suggestions"></div>
-                </div>
-            </div>
-
-            <div class="dashboard-bottom">
-                <h3>Buat Tugas Baru</h3>
-                <form id="create-task-form">
-                    <div class="form-group">
-                        <label>Nama</label>
-                        <input type="text" id="task-name" placeholder="Masukkan Nama Anda" value="">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Harga (Estimasi)</label>
-                        <input type="number" id="task-price" placeholder="Contoh: 15000" value="">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Mau beli apa</label>
-                        <input type="text" id="task-category" placeholder="Barang yang ingin dibeli" value="">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Foto Barang (Opsional)</label>
-                        <div class="image-upload-container">
-                            <input type="file" id="task-image" accept="image/*" hidden>
-                            <div class="upload-btn" id="upload-btn-trigger">
-                                <i class="fas fa-camera"></i>
-                                <span>Tambah Foto</span>
-                            </div>
-                            <div id="image-preview" class="image-preview" style="display:none;">
-                                <img id="preview-img" src="" alt="Preview">
-                                <button type="button" id="remove-image"><i class="fas fa-times"></i></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Tanggal</label>
-                        <div class="date-input-row">
-                            <span>25 th December 2026</span>
-                            <i class="fas fa-th-large"></i>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group half">
-                            <label>Waktu Mulai</label>
-                            <input type="text" id="start-time" value="02:30 PM">
-                        </div>
-                        <div class="form-group half">
-                            <label>Waktu Selesai</label>
-                            <input type="text" id="end-time" value="06:30 PM">
-                        </div>
-                    </div>
-
-                    <!-- Bottom Navigation (Moved here) -->
-                    <div class="bottom-nav"
-                        style="margin-top: 1.5rem; margin-bottom: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 1rem;">
-                        <i class="far fa-heart"></i>
-                        <i class="far fa-comment"></i>
-                        <i class="far fa-user"></i>
-                        <i class="fas fa-paper-plane"></i> <!-- Send Icon updated -->
-                        <i class="fas fa-home"></i>
-                    </div>
-
-                    <button type="submit" class="btn-submit-task" style="display:none;">Submit</button>
-                    <!-- Hidden submit for JS -->
-
-                    <!-- History Section -->
-                    <div class="history-section">
-                        <div class="history-header">
-                            <h4>Riwayat Pesanan</h4>
-                            <div class="history-toggles">
-                                <span class="toggle-btn active" id="view-daily">Harian</span>
-                                <span class="toggle-btn" id="view-all">Semua</span>
-                            </div>
-                        </div>
-                        <div class="subtitle-date" id="history-date-label"></div>
-
-                        <div class="history-list" id="history-list">
-                            <!-- History items will appear here -->
-                            <div class="empty-state">Belum ada pesanan.</div>
-                        </div>
-                    </div>
-                </form>
-
-            </div>
+        <!-- Search -->
+        <div class="search-container">
+          <div class="search-input-box">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Search your favorite food"
+            />
+          </div>
+          <div class="filter-btn">
+            <i class="fas fa-sliders-h"></i>
+          </div>
         </div>
 
+        <!-- Categories -->
+        <section class="category-section">
+          <div class="section-title">
+            <span>Find</span>
+            <span class="see-all">5km ></span>
+          </div>
+          <div class="category-list">
+            <div class="category-pill active" data-cat="all">Salads</div>
+            <div class="category-pill" data-cat="hot">Hot sale</div>
+            <div class="category-pill" data-cat="pop">Popularity</div>
+            <div class="category-pill" data-cat="snack">Snack</div>
+          </div>
+        </section>
+
+        <!-- Product Grid -->
+        <section class="product-grid" id="product-grid">
+          <!-- Products will be injected by JS -->
+          <!-- Example Card Structure -->
+          <!-- 
+                <div class="product-card">
+                    <i class="far fa-heart fav-icon"></i>
+                    <div class="product-img-container">
+                        <img src="img/salad1.png" alt="">
+                    </div>
+                    <div class="product-title">Seafood salad</div>
+                    <div class="product-meta">
+                        <span>20min</span>
+                        <span><i class="fas fa-star text-warning"></i> 4.5</span>
+                    </div>
+                    <div class="product-price">$12.00</div>
+                    <div class="add-btn-small">+</div>
+                </div> 
+                -->
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+          <div class="nav-item active"><i class="fas fa-home"></i></div>
+          <div class="nav-item"><i class="far fa-heart"></i></div>
+          <div class="nav-item"><i class="far fa-user"></i></div>
+          <div class="nav-item" id="nav-cart">
+            <i class="fas fa-shopping-bag"></i>
+          </div>
+        </nav>
+      </div>
+
+      <!-- === DETAIL VIEW (OVERLAY) === -->
+      <div class="detail-view" id="detail-view">
+        <header class="detail-header">
+          <i class="fas fa-chevron-left menu-btn" id="back-btn"></i>
+          <i class="fas fa-pen menu-btn" id="edit-product-btn"></i>
+        </header>
+
+        <div class="detail-image-section">
+          <div class="detail-plate">
+            <img id="detail-img" src="" alt="Food" />
+          </div>
+        </div>
+
+        <div class="qty-selector">
+          <span class="qty-btn" id="qty-minus">-</span>
+          <span class="qty-val" id="qty-val">1</span>
+          <span class="qty-btn" id="qty-plus">+</span>
+        </div>
+
+        <div class="detail-content">
+          <h2 class="detail-title" id="detail-title">Seafood Salad</h2>
+          <div class="detail-metrics">
+            <div class="metric-item">
+              <i class="fas fa-star"></i> <span id="detail-rating">4.5</span>
+            </div>
+            <div class="metric-item">
+              <i class="fas fa-fire"></i> <span id="detail-cals">100 Kcal</span>
+            </div>
+            <div class="metric-item">
+              <i class="far fa-clock"></i>
+              <span id="detail-time">10-20 Min</span>
+            </div>
+          </div>
+
+          <p class="detail-desc" id="detail-desc">
+            Fresh seafood salad with lettuce green mix, cherry tomatoes, herbs
+            and olive oil, lemon dressing food.
+          </p>
+
+          <h4 class="ingredients-title">Ingredients</h4>
+          <div class="ingredients-list">
+            <!-- Icons/Emojis for ingredients -->
+            <div class="ingredient-item">🍤</div>
+            <div class="ingredient-item">🍅</div>
+            <div class="ingredient-item">🥬</div>
+            <div class="ingredient-item">🍋</div>
+          </div>
+
+          <div class="detail-bottom-bar">
+            <div class="total-price-section">
+              <div class="total-price-label">Total Price</div>
+              <div class="total-price-val" id="detail-price">$12.00</div>
+            </div>
+            <div class="add-to-cart-btn" id="add-to-cart-main">
+              <div
+                style="
+                  background: rgba(255, 255, 255, 0.2);
+                  width: 30px;
+                  height: 30px;
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+              >
+                <i class="fas fa-shopping-bag"></i>
+              </div>
+              Add To Cart
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- === CHECKOUT MODAL === -->
+      <div id="checkout-modal" class="modal-overlay">
+        <div class="modal-content">
+          <h3>Checkout</h3>
+          <div
+            id="cart-summary"
+            style="
+              text-align: left;
+              margin-bottom: 1rem;
+              max-height: 150px;
+              overflow-y: auto;
+              font-size: 0.85rem;
+              background: #f9f9f9;
+              padding: 10px;
+              border-radius: 10px;
+            "
+          >
+            <!-- Cart items injected here -->
+          </div>
+          <div
+            style="font-weight: bold; margin-bottom: 1rem; text-align: right"
+            id="cart-total-display"
+          >
+            Total: $0.00
+          </div>
+          <p style="margin-bottom: 0.5rem">Atas nama siapa kak?</p>
+          <input type="text" id="customer-name" placeholder="Nama Anda..." />
+          <div class="modal-actions">
+            <button id="cancel-checkout" class="btn-cancel">Batal</button>
+            <button id="confirm-checkout" class="btn-confirm">
+              Lanjut ke WA
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- === CUSTOM ITEM MODAL === -->
+      <div id="custom-modal" class="modal-overlay">
+        <div class="modal-content">
+          <h3>Menu Lain</h3>
+          <p>Mau pesan yang belum ada di list?</p>
+          <input
+            type="text"
+            id="custom-name"
+            placeholder="Nama Makanan/Minuman"
+          />
+          <input
+            type="number"
+            id="custom-price"
+            placeholder="Harga (Est.) - Opsional"
+            style="margin-top: -10px"
+          />
+          <div class="modal-actions">
+            <button id="cancel-custom" class="btn-cancel">Batal</button>
+            <button id="confirm-custom" class="btn-confirm">Tambah</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div id="toast-box" class="toast-box"></div>
-
-    <!-- Comments Modal -->
-    <div id="comments-modal" class="modal-overlay" style="display:none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Komentar</h3>
-                <i class="fas fa-times" id="close-comments"></i>
-            </div>
-            <div class="comments-list" id="comments-list">
-                <!-- Comments will be loaded here -->
-                <div class="empty-state">Belum ada komentar. Jadilah yang pertama!</div>
-            </div>
-            <div class="comment-input-area">
-                <input type="text" id="comment-input" placeholder="Tulis komentar...">
-                <button id="send-comment"><i class="fas fa-paper-plane"></i></button>
+        <!-- === EDIT PRODUCT MODAL === -->
+        <div id="edit-modal" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Edit Produk</h3>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display:block; text-align:left; font-size:0.8rem; margin-bottom:5px; color:#888;">Ganti Gambar</label>
+                    <input type="file" id="edit-img-file" accept="image/*" style="padding: 10px; border: 2px dashed #ccc;">
+                </div>
+                <input type="text" id="edit-name" placeholder="Nama Produk">
+                <input type="number" id="edit-price" placeholder="Harga" style="margin-top:-10px;">
+                <textarea id="edit-desc" placeholder="Deskripsi" style="width:100%; padding:10px; border:2px solid #f0f0f0; border-radius:15px; margin-bottom:1.5rem; outline:none; font-family:inherit;"></textarea>
+                <div class="modal-actions">
+                    <button id="cancel-edit" class="btn-cancel">Batal</button>
+                    <button id="save-edit" class="btn-confirm">Simpan</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="js/script.js"></script>
-</body>
-
+  </body>
 </html>

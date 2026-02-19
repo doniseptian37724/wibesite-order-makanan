@@ -1,0 +1,9 @@
+{
+  "name": "anti-gravity-frontend",
+  "version": "1.0.0",
+  "description": "Anti Gravity - Food Order PWA Frontend",
+  "scripts": {
+    "dev": "npx serve public -l 5500",
+    "start": "npx serve public -l 5500"
+  }
+}

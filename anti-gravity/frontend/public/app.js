@@ -952,6 +952,7 @@ function quickAddToCart(menuId) {
   updateCartUI();
   renderMenus();
   playSound("audioCart");
+  triggerHaptic();
   showToast(`${menu.menu_name} ditambahkan! 🛒`, "success");
 }
 
@@ -1007,6 +1008,7 @@ function addToCartFromDetail(menuId, qty, note) {
   renderMenus();
   closeDetailModal();
   playSound("audioCart");
+  triggerHaptic();
   showToast(`${qty}x ${menu.menu_name} ditambahkan! 🛒`, "success");
 }
 
@@ -3465,3 +3467,33 @@ function downloadSalesCSV() {
 
   showToast("Laporan CSV berhasil diunduh! 📊", "success");
 }
+
+// ============================================
+// Premium Polish & UI Helpers (Auto-Run)
+// ============================================
+function getDynamicGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 11) return "Selamat Pagi ☀️";
+  if (hour < 15) return "Selamat Siang 🌤️";
+  if (hour < 19) return "Selamat Sore 🌅";
+  return "Selamat Malam 🌙";
+}
+
+function triggerHaptic() {
+  if (window.navigator && window.navigator.vibrate) {
+    window.navigator.vibrate(10); // Subtle vibration
+  }
+}
+
+function updateUIStatus() {
+  const greetingEl = document.querySelector(".welcome-text h1");
+  if (greetingEl) {
+    const name = state.customerName || "Sobat AG";
+    greetingEl.innerHTML = `${getDynamicGreeting()}, <br><span class="text-gradient">${name}</span>`;
+  }
+}
+
+// Global premium polish initialization
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(updateUIStatus, 500); // Slight delay for smoother impact
+});

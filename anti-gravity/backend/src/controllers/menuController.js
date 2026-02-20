@@ -8,8 +8,9 @@ const menuController = {
    */
   async getAll(req, res, next) {
     try {
-      const { category } = req.query;
-      const menus = await menuService.getAll(category);
+      const { category, admin_view } = req.query;
+      const includeHidden = admin_view === "true";
+      const menus = await menuService.getAll(category, includeHidden);
       return success(res, menus, "Daftar menu berhasil diambil");
     } catch (err) {
       next(err);

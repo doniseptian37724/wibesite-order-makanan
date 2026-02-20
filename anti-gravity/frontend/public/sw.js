@@ -1,68 +1,28 @@
-const CACHE_NAME = "anti-gravity-v1";
-const STATIC_ASSETS = [
-  "/",
-  "/index.html",
-  "/styles.css",
-  "/app.js",
-  "/manifest.json",
-];
+/**
+ * Anti Gravity - Service Worker (Kill Switch Version)
+ * This SW immediately removes itself and all old caches.
+ */
 
-// Install event
+// Kill all old caches immediately on install
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log("📦 Caching static assets");
-      return cache.addAll(STATIC_ASSETS);
+    caches.keys().then((keys) => {
+      return Promise.all(keys.map((key) => caches.delete(key)));
     }),
   );
   self.skipWaiting();
 });
 
-// Activate event
+// Claim all clients and then unregister self
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys
-          .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key)),
-      );
+    self.clients.claim().then(() => {
+      return self.registration.unregister();
     }),
   );
-  self.clients.claim();
 });
 
-// Fetch event - Network first, cache fallback
+// Pass ALL requests directly to network - no caching at all
 self.addEventListener("fetch", (event) => {
-  // Skip non-GET requests
-  if (event.request.method !== "GET") return;
-
-  // API requests - network only
-  if (event.request.url.includes("/api/")) {
-    event.respondWith(
-      fetch(event.request).catch(() => {
-        return new Response(
-          JSON.stringify({ success: false, message: "Offline" }),
-          { headers: { "Content-Type": "application/json" } },
-        );
-      }),
-    );
-    return;
-  }
-
-  // Static assets - cache first, network fallback
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      return (
-        cached ||
-        fetch(event.request).then((response) => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, clone);
-          });
-          return response;
-        })
-      );
-    }),
-  );
+  event.respondWith(fetch(event.request));
 });

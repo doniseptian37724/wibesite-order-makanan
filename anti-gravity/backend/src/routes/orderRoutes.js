@@ -12,9 +12,9 @@ const {
 router.post("/", validate(createOrderSchema), orderController.create);
 router.get("/code/:code", orderController.getByCode);
 
-// Admin routes
-router.get("/", authenticate, orderController.getAll);
-router.get("/:id", authenticate, orderController.getById);
+// Admin routes (Collaborative mode: allow list viewing)
+router.get("/", optionalAuth, orderController.getAll);
+router.get("/:id", optionalAuth, orderController.getById);
 router.patch(
   "/:id/status",
   authenticate,

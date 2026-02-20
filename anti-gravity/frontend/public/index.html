@@ -6,10 +6,10 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Anti Gravity - Order Makanan</title>
+    <title>Order Makanan</title>
     <meta
       name="description"
-      content="Anti Gravity - Order makanan mudah dan cepat via microsite. Pilih menu, pesan, dan bayar langsung!"
+      content="Doni - Order makanan mudah dan cepat via microsite. Pilih menu, pesan, dan bayar langsung!"
     />
     <meta name="theme-color" content="#0f0f23" />
     <meta property="og:title" content="Anti Gravity - Order Makanan" />
@@ -18,7 +18,7 @@
       content="Order makanan mudah dan cepat via microsite"
     />
     <meta property="og:type" content="website" />
-    <link rel="manifest" href="manifest.json" />
+    <link rel="manifest" href="manifest.json?v=2.0" />
     <link rel="apple-touch-icon" href="icons/icon-192.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -30,7 +30,29 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link rel="stylesheet" href="styles.css?v=2.0" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+      // FORCE RESET CACHE & SW (Tetap ada agar selalu terbaru)
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            registration.unregister();
+          }
+        });
+      }
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          for (let name of names) caches.delete(name);
+        });
+      }
+    </script>
   </head>
   <body>
     <!-- Splash Screen -->
@@ -39,7 +61,7 @@
         <div class="splash-logo">
           <i class="fas fa-rocket"></i>
         </div>
-        <h1 class="splash-title">Anti Gravity</h1>
+        <h1 class="splash-title">order makanan</h1>
         <p class="splash-subtitle">Order Makanan Mudah &amp; Cepat</p>
         <div class="splash-loader">
           <div class="loader-bar"></div>
@@ -56,7 +78,7 @@
           <div class="header-top">
             <div class="brand">
               <i class="fas fa-rocket brand-icon"></i>
-              <span class="brand-name">Anti Gravity</span>
+              <span class="brand-name">Order Makanan</span>
             </div>
             <div class="header-actions">
               <button
@@ -75,10 +97,27 @@
               </button>
               <button
                 class="icon-btn"
+                id="surprise-btn"
+                title="Pilihkan Untukku!"
+              >
+                <i class="fas fa-dice"></i>
+              </button>
+              <button
+                class="icon-btn"
+                id="theme-colors-btn"
+                title="Ganti warna tema"
+              >
+                <i class="fas fa-palette"></i>
+              </button>
+              <button
+                class="icon-btn"
                 id="theme-toggle"
                 aria-label="Toggle tema"
               >
                 <i class="fas fa-moon"></i>
+              </button>
+              <button class="icon-btn" id="user-login-btn" title="Login / Profil">
+                <i class="fas fa-user-circle"></i>
               </button>
             </div>
           </div>
@@ -118,12 +157,24 @@
         </div>
       </header>
 
+      <!-- Hero Slider -->
+      <section class="hero-slider" id="hero-slider">
+        <div class="slider-track" id="slider-track">
+          <!-- Slides injected by JS -->
+        </div>
+        <div class="slider-dots" id="slider-dots"></div>
+      </section>
+
       <!-- Category Tabs -->
       <nav class="category-nav" id="category-nav">
         <div class="category-scroll" id="category-scroll">
           <button class="category-tab active" data-category="all">
             <i class="fas fa-fire"></i>
             <span>Semua</span>
+          </button>
+          <button class="category-tab" data-category="favorites">
+            <i class="fas fa-heart"></i>
+            <span>Favorit</span>
           </button>
           <!-- Dynamic categories will be inserted here -->
         </div>
@@ -201,9 +252,18 @@
       <!-- Menu Detail Modal -->
       <div class="modal-overlay" id="detail-modal" style="display: none">
         <div class="modal-content detail-modal-content">
-          <button class="modal-close" id="close-detail">
-            <i class="fas fa-times"></i>
-          </button>
+          <div class="detail-modal-header-btns">
+            <button
+              class="modal-edit-btn"
+              id="edit-menu-btn"
+              title="Edit menu ini"
+            >
+              <i class="fas fa-pen"></i>
+            </button>
+            <button class="modal-close" id="close-detail">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
           <div class="detail-image">
             <img id="detail-img" src="" alt="" />
             <span class="detail-badge" id="detail-badge"></span>
@@ -220,7 +280,37 @@
               </span>
             </div>
             <h2 class="detail-name" id="detail-name"></h2>
+            <!-- Stats row (dari Ngedoni) -->
+            <div class="detail-stats" id="detail-stats">
+              <div class="detail-stat-item">
+                <i class="fas fa-star"></i>
+                <span id="detail-rating">4.5</span>
+              </div>
+              <div class="detail-stat-item">
+                <i class="fas fa-fire-alt"></i>
+                <span id="detail-cals">-</span>
+              </div>
+              <div class="detail-stat-item">
+                <i class="far fa-clock"></i>
+                <span id="detail-time">10-20 Min</span>
+              </div>
+            </div>
+
+            <div class="detail-ingredients-section">
+              <h4 class="ingredients-title">Ingredients</h4>
+              <div class="ingredients-list" id="detail-ingredients">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
             <p class="detail-desc" id="detail-desc"></p>
+
+            <!-- Options Section (Dynamically filled) -->
+            <div
+              class="detail-options-container"
+              id="detail-options-container"
+            ></div>
+
             <div class="detail-price-row">
               <span class="detail-price" id="detail-price"></span>
               <div class="detail-qty-control" id="detail-qty-control">
@@ -244,9 +334,122 @@
                 placeholder="Contoh: tidak pakai sambal, extra matang..."
               />
             </div>
+
+            <!-- Suggested Add-ons -->
+            <div class="detail-suggestions">
+              <h4 class="ingredients-title">Pasangannya menu ini:</h4>
+              <div class="suggestion-list" id="detail-suggestions-list">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
             <button class="add-to-cart-btn" id="detail-add-btn">
               <i class="fas fa-plus"></i>
               Tambah ke Keranjang · <span id="detail-add-price">Rp 0</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Menu Modal -->
+      <div class="modal-overlay" id="edit-modal" style="display: none">
+        <div class="modal-content edit-modal-content">
+          <div class="modal-header">
+            <h2 id="edit-modal-title"><i class="fas fa-pen"></i> Edit Menu</h2>
+            <button class="modal-close" id="close-edit-modal">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label><i class="fas fa-image"></i> Ganti Gambar</label>
+              <input
+                type="file"
+                id="edit-img-file"
+                accept="image/*"
+                class="file-input"
+              />
+              <div class="edit-img-preview" id="edit-img-preview"></div>
+            </div>
+            <div class="form-group">
+              <label for="edit-name"
+                ><i class="fas fa-utensils"></i> Nama Menu</label
+              >
+              <input type="text" id="edit-name" placeholder="Nama menu" />
+            </div>
+            <div class="form-group">
+              <label for="edit-price"
+                ><i class="fas fa-tag"></i> Harga (Rp)</label
+              >
+              <input
+                type="number"
+                id="edit-price"
+                placeholder="Contoh: 25000"
+              />
+            </div>
+            <div class="form-group">
+              <label for="edit-desc"
+                ><i class="fas fa-align-left"></i> Deskripsi</label
+              >
+              <textarea
+                id="edit-desc"
+                placeholder="Deskripsi menu..."
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              class="btn-danger"
+              id="delete-menu-btn"
+              style="display: none"
+            >
+              <i class="fas fa-trash"></i> Hapus
+            </button>
+            <button class="btn-secondary" id="cancel-edit-modal">Batal</button>
+            <button class="btn-primary" id="save-edit-btn">
+              <i class="fas fa-save"></i> Simpan
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Item Modal -->
+      <div class="modal-overlay" id="custom-modal" style="display: none">
+        <div class="modal-content custom-modal-content">
+          <div class="modal-header">
+            <h2><i class="fas fa-plus-circle"></i> Menu Lain?</h2>
+            <button class="modal-close" id="close-custom-modal">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p class="custom-modal-desc">
+              Mau pesan yang belum ada di list? Tulis aja!
+            </p>
+            <div class="form-group">
+              <label for="custom-name"
+                ><i class="fas fa-utensils"></i> Nama Makanan/Minuman</label
+              >
+              <input
+                type="text"
+                id="custom-name"
+                placeholder="Contoh: Nasi Uduk, Bakso Urat..."
+              />
+            </div>
+            <div class="form-group">
+              <label for="custom-price"
+                ><i class="fas fa-tag"></i> Estimasi Harga (Opsional)</label
+              >
+              <input type="number" id="custom-price" placeholder="0" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-secondary" id="cancel-custom-modal">
+              Batal
+            </button>
+            <button class="btn-primary" id="confirm-custom-btn">
+              <i class="fas fa-plus"></i> Tambah ke Keranjang
             </button>
           </div>
         </div>
@@ -287,6 +490,45 @@
                   autocomplete="tel"
                 />
               </div>
+
+              <!-- Service Type & Table -->
+              <div class="form-group">
+                <label><i class="fas fa-utensils"></i> Tipe Pesanan</label>
+                <div class="service-type-toggle">
+                  <button
+                    type="button"
+                    class="service-option active"
+                    data-type="dine-in"
+                  >
+                    <i class="fas fa-chair"></i> Makan di Sini
+                  </button>
+                  <button
+                    type="button"
+                    class="service-option"
+                    data-type="take-away"
+                  >
+                    <i class="fas fa-bag-shopping"></i> Bawa Pulang
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group" id="table-number-group">
+                <label for="table-number"
+                  ><i class="fas fa-hashtag"></i> Nomor Meja</label
+                >
+                <div class="table-input-wrapper">
+                  <input
+                    type="number"
+                    id="table-number"
+                    placeholder="Contoh: 05"
+                    min="1"
+                    max="50"
+                  />
+                  <span class="table-hint"
+                    >Pesan bareng teman? Masukkan meja yang sama!</span
+                  >
+                </div>
+              </div>
               <div class="form-group">
                 <label for="order-notes"
                   ><i class="fas fa-sticky-note"></i> Catatan Order
@@ -298,6 +540,80 @@
                   rows="2"
                 ></textarea>
               </div>
+
+              <div class="form-group">
+                <label for="customer-address"
+                  ><i class="fas fa-map-marker-alt"></i> Alamat
+                  Pengiriman</label
+                >
+                <div class="location-input-group">
+                  <textarea
+                    id="customer-address"
+                    placeholder="Masukkan alamat lengkap atau pilih lokasi di peta..."
+                    rows="2"
+                  ></textarea>
+                  <button
+                    type="button"
+                    class="btn-location-picker"
+                    id="open-map-btn"
+                  >
+                    <i class="fas fa-map-marked-alt"></i> Pilih di Peta
+                  </button>
+                  <input type="hidden" id="google-maps-link" />
+                </div>
+                <div
+                  id="location-badge"
+                  class="location-badge"
+                  style="display: none"
+                >
+                  <i class="fas fa-check-circle"></i> Lokasi Tersemat (Link Maps
+                  Siap)
+                </div>
+              </div>
+
+              <!-- Payment Method Selection -->
+              <div class="form-group">
+                <label><i class="fas fa-wallet"></i> Metode Pembayaran</label>
+                <div class="payment-methods">
+                  <div class="payment-method-card active" data-method="cash">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Tunai</span>
+                  </div>
+                  <div class="payment-method-card" data-method="transfer">
+                    <i class="fas fa-university"></i>
+                    <span>Transfer</span>
+                  </div>
+                  <div class="payment-method-card" data-method="qris">
+                    <i class="fas fa-qrcode"></i>
+                    <span>QRIS</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Promo Section -->
+              <div class="promo-section">
+                <label for="promo-code"
+                  ><i class="fas fa-ticket-alt"></i> Kode Promo</label
+                >
+                <div class="checkout-actions-row">
+                  <div class="promo-input-group">
+                    <input
+                      type="text"
+                      id="promo-code"
+                      placeholder="Punya kode promo?"
+                    />
+                    <button type="button" id="apply-promo-btn">Pakai</button>
+                  </div>
+                  <button
+                    type="button"
+                    class="btn-select-voucher"
+                    id="checkout-select-voucher-btn"
+                  >
+                    <i class="fas fa-ticket-alt"></i> Voucher Saya
+                  </button>
+                </div>
+                <div id="promo-message" class="promo-message"></div>
+              </div>
             </div>
 
             <!-- Order Summary -->
@@ -305,10 +621,24 @@
               <h3>Ringkasan Pesanan</h3>
               <div class="summary-items" id="summary-items"></div>
               <div class="summary-total">
-                <span>Total Pembayaran</span>
-                <span class="summary-total-amount" id="summary-total"
-                  >Rp 0</span
+                <div class="summary-row">
+                  <span>Subtotal</span>
+                  <span id="summary-subtotal">Rp 0</span>
+                </div>
+                <div
+                  class="summary-row promo-row"
+                  id="summary-promo-row"
+                  style="display: none"
                 >
+                  <span>Diskon</span>
+                  <span id="summary-discount">-Rp 0</span>
+                </div>
+                <div class="summary-row total-row">
+                  <span>Total Pembayaran</span>
+                  <span class="summary-total-amount" id="summary-total"
+                    >Rp 0</span
+                  >
+                </div>
               </div>
             </div>
           </div>
@@ -321,39 +651,80 @@
         </div>
       </div>
 
-      <!-- Order Confirmation Screen -->
+      <!-- Confirmation Modal -->
       <div class="modal-overlay" id="confirm-modal" style="display: none">
         <div class="modal-content confirm-modal-content">
           <div class="confirm-animation">
-            <div class="confirm-icon">
+            <div class="rocket-container" id="rocket-anim">
+              <i class="fas fa-rocket"></i>
+            </div>
+            <div class="success-check">
               <i class="fas fa-check"></i>
             </div>
           </div>
-          <h2 class="confirm-title">Pesanan Terkirim! 🎉</h2>
+          <h2 class="confirm-title">Order Berhasil! 🎉</h2>
           <p class="confirm-subtitle">
-            WhatsApp sudah terbuka dengan detail pesananmu
+            Silakan tunggu konfirmasi dari admin via WhatsApp.
           </p>
-          <div class="confirm-detail">
-            <div class="confirm-row">
-              <span>Kode Order</span>
-              <div class="confirm-code-wrapper">
-                <strong id="confirm-order-code">-</strong>
-                <button class="copy-btn" id="copy-code-btn" title="Salin kode">
-                  <i class="fas fa-copy"></i>
-                </button>
+
+          <div class="receipt-preview-container">
+            <div class="receipt-card" id="receipt-card">
+              <div class="receipt-header">
+                <h3>ANTI GRAVITY</h3>
+                <p class="receipt-code" id="confirm-order-code">AG-XXXXX</p>
+                <p
+                  class="receipt-date"
+                  id="receipt-date"
+                  style="font-size: 10px; color: #666"
+                ></p>
+              </div>
+              <div class="receipt-divider"></div>
+              <div class="receipt-body">
+                <div class="receipt-row">
+                  <span>Pelanggan:</span>
+                  <span id="confirm-name">-</span>
+                </div>
+                <div
+                  class="receipt-items-list"
+                  id="receipt-items-list"
+                  style="
+                    margin: 10px 0;
+                    border-top: 1px dashed #eee;
+                    padding-top: 10px;
+                  "
+                >
+                  <!-- Items go here -->
+                </div>
+                <div class="receipt-divider"></div>
+                <div
+                  class="receipt-row total-row"
+                  style="font-weight: 800; font-size: 16px; margin-top: 10px"
+                >
+                  <span>TOTAL:</span>
+                  <span id="confirm-total">Rp 0</span>
+                </div>
+              </div>
+              <div class="receipt-divider"></div>
+              <div class="receipt-footer">
+                <p>Terima kasih atas pesanan Anda!</p>
+                <small>Simpan struk ini sebagai bukti pembayaran</small>
               </div>
             </div>
-            <div class="confirm-row">
-              <span>Nama</span>
-              <strong id="confirm-name">-</strong>
-            </div>
-            <div class="confirm-row">
-              <span>Total</span>
-              <strong id="confirm-total" class="confirm-total-amount">-</strong>
-            </div>
+          </div>
+
+          <div class="confirm-actions">
+            <button class="btn-secondary" id="download-receipt-btn">
+              <i class="fas fa-download"></i> Simpan Struk
+            </button>
+            <button class="btn-wa-confirm" id="chat-admin-btn" style="display: none;">
+              <i class="fab fa-whatsapp"></i> Chat Admin
+            </button>
+            <button class="btn-primary" id="copy-code-btn">
+              <i class="fas fa-copy"></i> Salin Kode
+            </button>
           </div>
           <button class="confirm-close-btn" id="confirm-close-btn">
-            <i class="fas fa-home"></i> Kembali ke Menu
+            Selesai
           </button>
         </div>
       </div>
@@ -371,8 +742,82 @@
             <i class="fas fa-times"></i>
           </button>
         </div>
-        <div class="panel-body" id="history-list">
-          <div class="history-empty">
+        <div class="panel-body">
+          <!-- Membership Section -->
+          <div class="membership-card">
+            <div class="membership-glow"></div>
+            <div class="membership-header">
+              <div class="user-avatar">
+                <i class="fas fa-user-astronaut"></i>
+              </div>
+              <div class="user-meta">
+                <span id="mem-user-name">Penjelajah Rasa</span>
+                <div class="tier-badge" id="user-tier">Bronze Explorer</div>
+              </div>
+            </div>
+            <div class="membership-stats">
+              <div class="stat-box">
+                <span class="stat-label">Total Poin</span>
+                <span id="user-points" class="stat-value">0</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-label">Voucher</span>
+                <span class="stat-value">0</span>
+              </div>
+            </div>
+            <div class="points-progress">
+              <div class="progress-info">
+                <span>Progres ke Silver Voyager</span>
+                <span id="points-needed">500 pts lagi</span>
+              </div>
+              <div class="progress-bar">
+                <div class="bar-fill" id="mem-progress-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            <button class="redeem-btn" id="open-rewards-btn">
+              <i class="fas fa-gift"></i> Tukar Poin Hadiah
+            </button>
+          </div>
+
+          <!-- My Vouchers Section -->
+          <div class="vouchers-section" id="vouchers-section" style="display: none">
+            <div class="section-header-mini">
+              <h4><i class="fas fa-ticket-alt"></i> Voucher Saya</h4>
+              <button class="btn-text-sm" id="close-vouchers">Tutup</button>
+            </div>
+            <div class="vouchers-list" id="my-vouchers-list">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+
+          <!-- Rewards Selection (Hidden by default) -->
+          <div class="vouchers-section" id="rewards-selection" style="display: none">
+            <div class="section-header-mini">
+              <h4><i class="fas fa-store"></i> Toko Hadiah</h4>
+              <button class="btn-text-sm" id="close-rewards">Kembali</button>
+            </div>
+            <div class="rewards-grid">
+              <div class="reward-item" data-cost="500" data-value="5000" data-name="Diskon Rp 5.000">
+                <div class="reward-cost">500 pts</div>
+                <div class="reward-info">
+                  <span class="reward-title">Diskon Rp 5.000</span>
+                  <span class="reward-desc">Potongan langsung</span>
+                </div>
+                <button class="btn-claim">Tukar</button>
+              </div>
+              <div class="reward-item" data-cost="1500" data-value="20000" data-name="Diskon Rp 20.000">
+                <div class="reward-cost">1.5k pts</div>
+                <div class="reward-info">
+                  <span class="reward-title">Diskon Rp 20.000</span>
+                  <span class="reward-desc">Hemat luar biasa!</span>
+                </div>
+                <button class="btn-claim">Tukar</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="history-list">
+            <div class="history-empty">
             <i class="fas fa-receipt"></i>
             <p>Belum ada riwayat order</p>
           </div>
@@ -381,24 +826,457 @@
           <button class="clear-history-btn" id="clear-history-btn">
             <i class="fas fa-trash"></i> Hapus Semua Riwayat
           </button>
+          <!-- Admin Access -->
+          <button class="admin-dashboard-btn" id="open-admin-btn">
+            <i class="fas fa-chart-line"></i> Dashboard Admin
+          </button>
         </div>
       </div>
 
-      <!-- Floating Cart Button (Mobile) -->
-      <button class="floating-cart" id="floating-cart" style="display: none">
-        <div class="floating-cart-info">
-          <span class="floating-cart-count" id="floating-count">0 item</span>
-          <span class="floating-cart-total" id="floating-total">Rp 0</span>
-        </div>
-        <div class="floating-cart-icon">
-          <i class="fas fa-shopping-bag"></i>
-        </div>
-      </button>
+      <!-- Admin Dashboard Panel -->
+      <div class="modal-overlay" id="admin-modal" style="display: none">
+        <div class="modal-content admin-modal-content">
+          <div class="modal-header">
+            <h2><i class="fas fa-shield-halved"></i> Dashboard Admin</h2>
+            <button class="modal-close" id="close-admin">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-tabs">
+            <button class="modal-tab active" data-tab="admin-overview">
+              Ringkasan
+            </button>
+            <button class="modal-tab" data-tab="admin-stock">Stok Menu</button>
+            <button class="modal-tab" data-tab="admin-cloud">
+              Cloud Orders
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- TAB: Overview -->
+            <div id="admin-overview" class="tab-content active">
+              <!-- Manual Toggle -->
+              <div class="admin-section">
+                <h3><i class="fas fa-power-off"></i> Status Toko</h3>
+                <div class="toggle-container">
+                  <span id="manual-status-label">Buka/Tutup Toko</span>
+                  <label class="switch">
+                    <input type="checkbox" id="manual-status-toggle" />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                <p class="admin-hint">
+                  Geser untuk membuka atau menutup toko secara manual (melewati
+                  jam otomatis).
+                </p>
+              </div>
 
-      <!-- Toast Container -->
+              <!-- Sound Settings -->
+              <div class="admin-section">
+                <h3><i class="fas fa-volume-up"></i> Pengaturan Notifikasi</h3>
+                <div class="toggle-container">
+                  <span>Suara Pesanan Baru</span>
+                  <label class="switch">
+                    <input type="checkbox" id="admin-sound-toggle" checked />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                <p class="admin-hint">
+                  Aktifkan suara untuk mendapatkan peringatan saat ada pesanan
+                  baru masuk ke cloud.
+                </p>
+              </div>
+
+              <!-- Stats -->
+              <div class="admin-section">
+                <h3><i class="fas fa-chart-pie"></i> Statistik Hari Ini</h3>
+                <div class="stats-grid">
+                  <div class="stat-card">
+                    <span class="stat-label">Pendapatan</span>
+                    <span class="stat-value" id="stat-revenue">Rp 0</span>
+                  </div>
+                  <div class="stat-card">
+                    <span class="stat-label">Total Order</span>
+                    <span class="stat-value" id="stat-orders">0</span>
+                  </div>
+                  <div class="stat-card">
+                    <span class="stat-label">Top Item</span>
+                    <span class="stat-value" id="stat-top-item">-</span>
+                  </div>
+                </div>
+
+                <!-- Sales Chart -->
+                <div class="admin-section-card">
+                  <h4 class="section-title-mini">Tren Penjualan (7 Hari)</h4>
+                  <div class="sales-chart-container">
+                    <div class="sales-chart" id="sales-chart">
+                      <!-- Bars injected via JS -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Admin Actions -->
+                <div class="admin-section">
+                  <h3><i class="fas fa-file-export"></i> Laporan & Data</h3>
+                  <button
+                    class="btn-report-csv"
+                    id="admin-download-csv"
+                    style="width: 100%"
+                  >
+                    <i class="fas fa-file-csv"></i> Download Laporan (.csv)
+                  </button>
+                </div>
+
+                <div class="admin-section">
+                  <h3><i class="fas fa-cog"></i> Integrasi Sistem</h3>
+                  <div class="admin-action-row" style="display: flex; flex-direction: column; gap: 8px;">
+                    <button
+                      class="btn-secondary"
+                      id="admin-test-wa"
+                      style="width: 100%; justify-content: center; gap: 8px;"
+                    >
+                      <i class="fab fa-whatsapp"></i> Klik untuk Tes Kirim WA
+                    </button>
+                    <button
+                      class="btn-primary"
+                      id="btn-enable-notifications"
+                      style="width: 100%; justify-content: center; gap: 8px; background: var(--warning); color: #000;"
+                    >
+                      <i class="fas fa-bell"></i> Aktifkan Dering & Getar HP
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            <!-- TAB: Stock Management -->
+            <div id="admin-stock" class="tab-content" style="display: none">
+              <div class="admin-section">
+                <div class="section-title-row">
+                  <h3><i class="fas fa-boxes-stacked"></i> Manajemen Stok</h3>
+                </div>
+                <div class="search-container" style="margin-bottom: 12px">
+                  <i class="fas fa-search search-icon"></i>
+                  <input
+                    type="text"
+                    id="admin-menu-search"
+                    class="search-input"
+                    placeholder="Cari menu untuk kelola stok..."
+                  />
+                </div>
+                <div id="admin-stock-list" class="admin-stock-list">
+                  <!-- Injected via JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB: Cloud Orders -->
+            <div id="admin-cloud" class="tab-content" style="display: none">
+              <div class="admin-section">
+                <div class="section-title-row">
+                  <h3>
+                    <i class="fas fa-satellite-dish"></i> Cloud Orders (Antar
+                    Staf)
+                  </h3>
+                  <div class="cloud-actions">
+                    <button
+                      class="btn-icon-sm"
+                      id="refresh-server-orders"
+                      title="Refresh"
+                    >
+                      <i class="fas fa-sync-alt"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="cloud-filters">
+                  <button class="cloud-filter-btn active" data-status="all">
+                    Semua
+                  </button>
+                  <button class="cloud-filter-btn" data-status="pending">
+                    Pending
+                  </button>
+                  <button class="cloud-filter-btn" data-status="ready">
+                    Siap
+                  </button>
+                </div>
+                <div id="server-orders-list" class="server-orders-list">
+                  <div class="admin-empty-state">
+                    <i class="fas fa-cloud-download-alt"></i>
+                    <p>
+                      Klik tombol refresh untuk melihat pesanan dari
+                      staf/perangkat lain.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QRIS Payment Modal -->
+        <div class="modal-overlay" id="qris-modal" style="display: none">
+          <div class="modal-content qris-modal-content">
+            <div class="modal-header">
+              <h2><i class="fas fa-qrcode"></i> Bayar QRIS</h2>
+              <button class="modal-close" id="close-qris">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div class="modal-body qris-body">
+              <div class="qris-container">
+                <img
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=QRIS_SIMULATION_DATA"
+                  alt="QRIS Code"
+                  id="qris-image"
+                />
+                <div class="qris-logo-overlay">QRIS</div>
+              </div>
+              <div class="qris-info">
+                <p class="qris-total-label">Total Pembayaran</p>
+                <h3 class="qris-total-amount" id="qris-total">Rp 0</h3>
+                <p class="qris-hint">
+                  Silakan scan kode di atas untuk melakukan pembayaran melalui
+                  e-wallet (GoPay, OVO, Dana) atau M-Banking.
+                </p>
+              </div>
+              <button class="btn-primary w-full" id="confirm-qris-paid">
+                <i class="fas fa-check-circle"></i> Saya Sudah Bayar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Cart Button (Mobile) -->
+        <button class="floating-cart" id="floating-cart" style="display: none">
+          <div class="floating-cart-info">
+            <span class="floating-cart-count" id="floating-count">0 item</span>
+            <span class="floating-cart-total" id="floating-total">Rp 0</span>
+          </div>
+          <div class="floating-cart-icon">
+            <i class="fas fa-shopping-bag"></i>
+          </div>
+        </button>
+
+        <!-- Floating WhatsApp Button -->
+        <a
+          href="https://wa.me/6289637931794"
+          target="_blank"
+          class="floating-wa"
+          id="floating-wa"
+        >
+          <i class="fab fa-whatsapp"></i>
+          <span class="wa-tooltip">Tanya Admin</span>
+        </a>
+
+        <!-- Social Proof Notification -->
+        <div class="social-proof" id="social-proof">
+          <div class="sp-icon"><i class="fas fa-fire"></i></div>
+          <div class="sp-text" id="sp-text">
+            12 orang sedang melihat menu ini
+          </div>
+        </div>
+
+        <!-- Theme Color Modal -->
+        <div class="modal-overlay" id="color-modal" style="display: none">
+          <div class="modal-content color-modal-content">
+            <div class="modal-header">
+              <h2><i class="fas fa-palette"></i> Pilih Warna Brand</h2>
+              <button class="modal-close" id="close-colors">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div class="color-grid">
+              <div
+                class="color-option active"
+                data-color="purple"
+                style="--opt-color: #7c3aed"
+              ></div>
+              <div
+                class="color-option"
+                data-color="red"
+                style="--opt-color: #ef4444"
+              ></div>
+              <div
+                class="color-option"
+                data-color="gold"
+                style="--opt-color: #f59e0b"
+              ></div>
+              <div
+                class="color-option"
+                data-color="green"
+                style="--opt-color: #10b981"
+              ></div>
+              <div
+                class="color-option"
+                data-color="blue"
+                style="--opt-color: #3b82f6"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Surprise Me Modal -->
+      <div class="modal-overlay" id="surprise-modal" style="display: none">
+        <div class="modal-content surprise-modal-content">
+          <div class="surprise-animation">
+            <div class="dice-wrapper">
+              <i class="fas fa-dice dice-icon" id="dice-anim"></i>
+            </div>
+            <h3>Pilihkan Makananku!</h3>
+            <p>Sistem sedang mencari menu yang paling cocok buat kamu...</p>
+          </div>
+          <div
+            id="surprise-result"
+            class="surprise-result"
+            style="display: none"
+          >
+            <!-- Result Card Injected -->
+          </div>
+          <div class="surprise-footer">
+            <button class="btn-secondary" id="surprise-again">
+              Coba Lagi 🎲
+            </button>
+            <button
+              class="btn-primary"
+              id="surprise-open"
+              style="display: none"
+            >
+              Lihat Menu 🍽️
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Map Picker Modal -->
+      <div class="modal-overlay" id="map-modal" style="display: none">
+        <div class="modal-content map-modal-content">
+          <div class="modal-header">
+            <h2><i class="fas fa-map-marked-alt"></i> Pasang Pin Lokasi</h2>
+            <button class="modal-close" id="close-map">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="map-modal-body">
+            <p class="map-hint">
+              Geser peta untuk menentukan titik pengiriman yang tepat.
+            </p>
+            <div id="map-container"></div>
+            <div class="map-controls">
+              <button
+                type="button"
+                class="btn-secondary"
+                id="btn-get-current-loc"
+              >
+                <i class="fas fa-location-arrow"></i> Lokasi Saya Sekarang
+              </button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-primary w-full" id="confirm-location-btn">
+              Konfirmasi Titik Lokasi
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin PIN Modal -->
+      <div class="modal-overlay" id="pin-modal" style="display: none">
+        <div class="modal-content pin-modal-content">
+          <div class="modal-header">
+            <h2><i class="fas fa-lock"></i> Verifikasi Admin</h2>
+            <button class="modal-close" id="close-pin">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p class="pin-hint">
+              Masukkan 4 digit kode akses untuk masuk ke Dashboard Admin.
+            </p>
+            <div class="pin-container">
+              <input
+                type="password"
+                id="admin-pin"
+                maxlength="4"
+                placeholder="••••"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-primary w-full" id="confirm-pin-btn">
+              Buka Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audio Elements -->
+      <audio
+        id="snd-cart"
+        src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"
+      ></audio>
+      <audio
+        id="snd-order"
+        src="https://assets.mixkit.co/active_storage/sfx/1359/1359-preview.mp3"
+      ></audio>
+      <audio
+        id="snd-rocket"
+        src="https://assets.mixkit.co/active_storage/sfx/2042/2042-preview.mp3"
+      ></audio>
+      <audio
+        id="snd-siren"
+        src="https://assets.mixkit.co/active_storage/sfx/1004/1004-preview.mp3"
+        loop
+      ></audio>
+
+      <!-- Login Modal -->
+    <div class="modal-overlay" id="login-modal" style="display: none">
+      <div class="modal-content login-modal-content">
+        <div class="modal-header">
+          <h2><i class="fab fa-whatsapp"></i> Login WhatsApp</h2>
+          <button class="modal-close" id="close-login">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="login-intro">
+            <p>
+              Masuk untuk memudahkan pemesanan dan kumpulkan poin reward di
+              setiap transaksi!
+            </p>
+          </div>
+          <div class="form-group">
+            <label for="login-phone">Nomor WhatsApp</label>
+            <div class="input-with-icon">
+              <i class="fab fa-whatsapp"></i>
+              <input
+                type="tel"
+                id="login-phone"
+                placeholder="Contoh: 0812xxxxxx"
+              />
+            </div>
+          </div>
+          <div id="login-name-group" class="form-group" style="display: none">
+            <label for="login-name">Nama Lengkap</label>
+            <div class="input-with-icon">
+              <i class="fas fa-user"></i>
+              <input
+                type="text"
+                id="login-name"
+                placeholder="Masukkan nama Anda"
+              />
+            </div>
+          </div>
+          <button class="btn-primary w-full" id="btn-do-login" style="margin-top: 20px;">
+            Lanjut <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
       <div class="toast-container" id="toast-container"></div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=4.0"></script>
   </body>
 </html>

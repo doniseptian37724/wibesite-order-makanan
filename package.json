@@ -1,0 +1,14 @@
+{
+  "name": "anti-gravity-root",
+  "version": "1.0.0",
+  "description": "Root package for Anti Gravity",
+  "main": "anti-gravity/backend/src/server.js",
+  "scripts": {
+    "start": "cd anti-gravity/backend && npm start",
+    "install": "cd anti-gravity/backend && npm install",
+    "postinstall": "cd anti-gravity/backend && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -11,7 +11,7 @@ const CONFIG = {
   API_BASE: "/api/v1",
   WA_ADMIN_NUMBER: "6289637931794", // Nomor WA Doni
   CURRENCY: "IDR",
-  APP_NAME: "Anti Gravity",
+  APP_NAME: "Order Makanan dan Minuman",
   OPEN_HOUR: 8,
   CLOSE_HOUR: 22,
 };

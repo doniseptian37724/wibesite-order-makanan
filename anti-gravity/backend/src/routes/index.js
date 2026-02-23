@@ -12,7 +12,7 @@ router.get("/health", (req, res) => {
   const dbConnected = pool.isConnected();
   res.json({
     success: true,
-    message: "Anti Gravity API is healthy 🚀",
+    message: "Order Makanan & Minuman API is healthy 🚀",
     mode: dbConnected
       ? "🟢 Live (Database Connected)"
       : "🟡 Demo (No Database)",
@@ -25,7 +25,7 @@ router.get("/health", (req, res) => {
 router.get("/test-wa", async (req, res) => {
   const whatsappService = require("../services/whatsappService");
   const testMsg =
-    "🚀 *TES KONEKSI ANTI GRAVITY*\n\nJika Anda menerima pesan ini, berarti sistem WhatsApp otomatis Anda sudah AKTIF dan SIAP menerima pesanan! 🔥";
+    "🚀 *TES KONEKSI ORDER MAKANAN & MINUMAN*\n\nJika Anda menerima pesan ini, berarti sistem WhatsApp otomatis Anda sudah AKTIF dan SIAP menerima pesanan! 🔥";
 
   const result = await whatsappService.sendMessageToAdmin(testMsg);
 

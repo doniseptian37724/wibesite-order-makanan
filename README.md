@@ -1,4 +1,4 @@
-# 🚀 Anti Gravity - Food Order System
+# 🚀 Order Makanan & Minuman - Premium System
 
 Aplikasi pemesanan makanan premium dengan dukungan WhatsApp, loyalty points, dan mode demo otomatis.
 

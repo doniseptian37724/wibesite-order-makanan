@@ -39,7 +39,7 @@ class OrderService {
       await client.query("BEGIN");
 
       const orderId = uuidv4();
-      const orderCode = `AG-${Date.now().toString(36).toUpperCase()}`;
+      const orderCode = `OM-${Date.now().toString(36).toUpperCase()}`;
 
       // Calculate total from items
       let totalAmount = 0;

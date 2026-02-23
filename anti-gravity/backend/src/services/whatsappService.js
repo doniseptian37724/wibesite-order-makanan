@@ -109,7 +109,7 @@ class WhatsAppService {
    */
   buildCustomerMessage(order) {
     let msg = `Halo *${order.order_customer_name}*! 👋\n\n`;
-    msg += `Terima kasih! Pesanan Anda telah diterima oleh *Anti Gravity*.\n\n`;
+    msg += `Terima kasih! Pesanan Anda telah diterima oleh *Order Makanan & Minuman*.\n\n`;
     msg += `🆔 *Kode:* [${order.order_code}]\n`;
     msg += `💰 *Total:* *Rp ${order.order_total_amount.toLocaleString()}*\n\n`;
     msg += `Sistem sedang meneruskan pesanan Anda ke dapur. Kami akan segera memprosesnya! 👨‍🍳\n\n`;

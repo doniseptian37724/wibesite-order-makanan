@@ -126,7 +126,7 @@ function createDemoOrder(data) {
 
   const order = {
     order_id: `demo-order-${Date.now()}`,
-    order_code: `AG-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+    order_code: `OM-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
     order_customer_name: data.order_customer_name,
     order_customer_phone: data.order_customer_phone,
     order_total_amount: total,

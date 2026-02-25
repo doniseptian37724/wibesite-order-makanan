@@ -2640,23 +2640,26 @@ function initEventListeners() {
 
     $("#admin-test-wa")?.addEventListener("click", async () => {
       try {
-        showToast(`Menghubungi: ${CONFIG.API_BASE}...`, "info");
+        showToast("Sedang mencoba kirim pesan tes...", "info");
         const res = await fetch(`${CONFIG.API_BASE}/test-wa`, {
           signal: AbortSignal.timeout(10000),
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        if (data.success) {
+
+        const data = await res
+          .json()
+          .catch(() => ({ success: false, message: `HTTP ${res.status}` }));
+
+        if (res.ok && data.success) {
           showToast("✅ Berhasil! Cek WhatsApp Admin.", "success");
         } else {
-          showToast(`❌ Gagal: ${data.message}`, "error");
+          showToast(
+            `❌ Gagal: ${data.message || "Terjadi kesalahan"}`,
+            "error",
+          );
         }
       } catch (err) {
-        showToast(
-          `❌ Error: ${err.message} (API: ${CONFIG.API_BASE})`,
-          "error",
-        );
-        console.error("WA Test Error:", err, "API:", CONFIG.API_BASE);
+        showToast(`❌ Error: ${err.message}`, "error");
+        console.error("WA Test Error:", err);
       }
     });
 

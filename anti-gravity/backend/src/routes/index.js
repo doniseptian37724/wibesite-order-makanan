@@ -36,10 +36,12 @@ router.get("/test-wa", async (req, res) => {
       details: result.details,
     });
   } else {
-    res.status(500).json({
+    // If it's a config error, use 400 instead of 500
+    const statusCode = result.error ? 400 : 500;
+    res.status(statusCode).json({
       success: false,
-      message: "Gagal mengirim tes via Fonnte.",
-      details: result.details || "Konfigurasi tidak valid",
+      message: result.error || "Gagal mengirim tes via Fonnte.",
+      details: result.details || result.error || "Konfigurasi tidak valid",
     });
   }
 });

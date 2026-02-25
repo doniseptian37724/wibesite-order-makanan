@@ -21,6 +21,9 @@ router.get("/health", (req, res) => {
       adminNumber: !!config.whatsappAdminNumber,
       apiKey: !!config.waApiKey,
       groupId: !!config.whatsappGroupId,
+      detectedKeys: Object.keys(process.env).filter(
+        (k) => k.includes("WA") || k.includes("WHATSAPP"),
+      ),
     },
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),

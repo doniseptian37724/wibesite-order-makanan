@@ -1,13 +1,14 @@
 const axios = require("axios");
+const config = require("../config/env");
 
 /**
  * Service to handle WhatsApp notifications via 3rd party Gateway (e.g. Fonnte)
  */
 class WhatsAppService {
   constructor() {
-    this.apiKey = process.env.WA_API_KEY || "";
-    this.adminNumber = process.env.WHATSAPP_ADMIN_NUMBER || "";
-    this.groupId = process.env.WHATSAPP_GROUP_ID || "";
+    this.apiKey = config.waApiKey;
+    this.adminNumber = config.whatsappAdminNumber;
+    this.groupId = config.whatsappGroupId;
   }
 
   /**

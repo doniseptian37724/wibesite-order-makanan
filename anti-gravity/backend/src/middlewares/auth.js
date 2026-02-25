@@ -6,6 +6,14 @@ const { error } = require("../utils/response");
  * JWT Authentication Middleware
  */
 const authenticate = (req, res, next) => {
+  const pool = require("../config/database");
+
+  // Bypass authentication in Demo Mode
+  if (!pool.isConnected()) {
+    req.user = { id: "demo-admin", role: "admin" };
+    return next();
+  }
+
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {

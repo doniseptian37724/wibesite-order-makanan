@@ -3,7 +3,7 @@
  * (misal: bekerja dari rumah tanpa VPN kantor)
  */
 
-const DEMO_MENUS = [
+let DEMO_MENUS = [
   {
     menu_id: "demo-1",
     menu_name: "Nasi Goreng Spesial",
@@ -110,6 +110,41 @@ function getDemoMenu(id) {
   return DEMO_MENUS.find((m) => m.menu_id === id) || null;
 }
 
+function createDemoMenu(data) {
+  const newMenu = {
+    menu_id: `demo-${Date.now()}`,
+    ...data,
+    menu_is_available:
+      data.menu_is_available !== undefined ? data.menu_is_available : true,
+    menu_created_at: new Date().toISOString(),
+    menu_updated_at: new Date().toISOString(),
+  };
+  DEMO_MENUS.push(newMenu);
+  return newMenu;
+}
+
+function updateDemoMenu(id, data) {
+  const idx = DEMO_MENUS.findIndex((m) => m.menu_id === id);
+  if (idx === -1) return null;
+
+  DEMO_MENUS[idx] = {
+    ...DEMO_MENUS[idx],
+    ...data,
+    menu_updated_at: new Date().toISOString(),
+  };
+  return DEMO_MENUS[idx];
+}
+
+function deleteDemoMenu(id) {
+  const idx = DEMO_MENUS.findIndex((m) => m.menu_id === id);
+  if (idx === -1) return null;
+
+  // Soft delete for demo (mark as unavailable)
+  DEMO_MENUS[idx].menu_is_available = false;
+  DEMO_MENUS[idx].menu_updated_at = new Date().toISOString();
+  return DEMO_MENUS[idx];
+}
+
 function getDemoCategories() {
   return [...new Set(DEMO_MENUS.map((m) => m.menu_category))].sort();
 }
@@ -164,6 +199,9 @@ function updateDemoOrderStatus(id, status) {
 module.exports = {
   getDemoMenus,
   getDemoMenu,
+  createDemoMenu,
+  updateDemoMenu,
+  deleteDemoMenu,
   getDemoCategories,
   createDemoOrder,
   getDemoOrders,

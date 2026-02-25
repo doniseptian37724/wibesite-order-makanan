@@ -43,7 +43,13 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 // Serve frontend static files - SAME PORT as backend
-const frontendPath = path.resolve(__dirname, "../../frontend/public");
+// Coba deteksi folder frontend di beberapa lokasi (lokal vs server)
+let frontendPath = path.resolve(__dirname, "../../frontend/public");
+if (!require("fs").existsSync(path.join(frontendPath, "index.html"))) {
+  // Jika tidak ketemu, coba jalur alternatif untuk Railway environment
+  frontendPath = path.resolve(process.cwd(), "anti-gravity/frontend/public");
+}
+
 app.use(express.static(frontendPath));
 
 // API Routes
@@ -52,7 +58,8 @@ app.use("/api/v1", routes);
 // Catch-all: serve index.html for any non-API route
 app.get("*", (req, res) => {
   if (!req.path.startsWith("/api")) {
-    res.sendFile(path.join(frontendPath, "index.html"));
+    const indexPath = path.join(frontendPath, "index.html");
+    res.sendFile(indexPath);
   }
 });
 

@@ -53,7 +53,7 @@ class MenuService {
    */
   async create(data) {
     if (!pool.isConnected()) {
-      throw new Error("Fitur ini membutuhkan koneksi database kantor");
+      return demo.createDemoMenu(data);
     }
 
     const id = uuidv4();
@@ -80,7 +80,7 @@ class MenuService {
    */
   async update(id, data) {
     if (!pool.isConnected()) {
-      throw new Error("Fitur ini membutuhkan koneksi database kantor");
+      return demo.updateDemoMenu(id, data);
     }
 
     const fields = [];
@@ -108,7 +108,7 @@ class MenuService {
    */
   async delete(id) {
     if (!pool.isConnected()) {
-      throw new Error("Fitur ini membutuhkan koneksi database kantor");
+      return demo.deleteDemoMenu(id);
     }
 
     const result = await pool.query(

@@ -18,13 +18,20 @@ router.get("/health", (req, res) => {
       ? "🟢 Live (Database Connected)"
       : "🟡 Demo (No Database)",
     service: process.env.RAILWAY_SERVICE_NAME || "unknown",
+    nodeEnv: process.env.NODE_ENV || "unknown",
     whatsappConfig: {
       adminNumber: !!config.whatsappAdminNumber,
       apiKey: !!config.waApiKey,
       groupId: !!config.whatsappGroupId,
-      detectedKeys: Object.keys(process.env).filter(
-        (k) => k.includes("WA") || k.includes("WHATSAPP"),
-      ),
+      detectedKeys: Object.keys(process.env).filter((k) => {
+        const key = k.toUpperCase();
+        return (
+          key.includes("WA") ||
+          key.includes("API") ||
+          key.includes("KEY") ||
+          key.includes("NUMBER")
+        );
+      }),
     },
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),

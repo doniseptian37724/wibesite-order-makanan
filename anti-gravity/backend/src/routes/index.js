@@ -10,12 +10,18 @@ router.use("/customers", require("./customerRoutes"));
 router.get("/health", (req, res) => {
   const pool = require("../config/database");
   const dbConnected = pool.isConnected();
+  const config = require("../config/env");
   res.json({
     success: true,
     message: "Order Makanan & Minuman API is healthy 🚀",
     mode: dbConnected
       ? "🟢 Live (Database Connected)"
       : "🟡 Demo (No Database)",
+    whatsappConfig: {
+      adminNumber: !!config.whatsappAdminNumber,
+      apiKey: !!config.waApiKey,
+      groupId: !!config.whatsappGroupId,
+    },
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
   });

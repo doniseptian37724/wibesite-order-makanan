@@ -11,28 +11,14 @@ router.get("/health", (req, res) => {
   const pool = require("../config/database");
   const dbConnected = pool.isConnected();
   const config = require("../config/env");
+
   res.json({
     success: true,
     message: "Order Makanan & Minuman API is healthy 🚀",
     mode: dbConnected
       ? "🟢 Live (Database Connected)"
       : "🟡 Demo (No Database)",
-    service: process.env.RAILWAY_SERVICE_NAME || "unknown",
-    nodeEnv: process.env.NODE_ENV || "unknown",
-    project: process.env.RAILWAY_PROJECT_NAME || "unknown",
-    domain: process.env.RAILWAY_PUBLIC_DOMAIN || "unknown",
-    commit: process.env.RAILWAY_GIT_COMMIT_SHA || "unknown",
-    whatsappConfig: {
-      adminNumber: !!config.whatsappAdminNumber,
-      apiKey: !!config.waApiKey,
-      groupId: !!config.whatsappGroupId,
-      keys: Object.keys(process.env).filter(
-        (k) => k.startsWith("WA") || k.startsWith("WHATSAPP"),
-      ),
-      wa_key_exists: !!process.env.WA_API_KEY,
-      admin_num_exists: !!process.env.WHATSAPP_ADMIN_NUMBER,
-    },
-    all_env_keys: Object.keys(process.env).sort(),
+    whatsappStatus: !!(config.waApiKey && config.whatsappAdminNumber),
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
   });

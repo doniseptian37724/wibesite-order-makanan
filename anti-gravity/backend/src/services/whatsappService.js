@@ -44,10 +44,11 @@ class WhatsAppService {
    * Send message to Admin
    */
   async sendMessageToAdmin(message) {
-    if (!this.apiKey || !this.adminNumber || this.apiKey.includes("DISINI")) {
+    if (!this.apiKey || !this.adminNumber) {
       return {
         success: false,
-        error: "Konfigurasi WhatsApp belum lengkap di file .env",
+        error:
+          "Konfigurasi WhatsApp belum lengkap. Pastikan WA_API_KEY dan WHATSAPP_ADMIN_NUMBER sudah diatur di file .env atau Railway Variables.",
       };
     }
 

@@ -17,6 +17,7 @@ router.get("/health", (req, res) => {
     mode: dbConnected
       ? "🟢 Live (Database Connected)"
       : "🟡 Demo (No Database)",
+    service: process.env.RAILWAY_SERVICE_NAME || "unknown",
     whatsappConfig: {
       adminNumber: !!config.whatsappAdminNumber,
       apiKey: !!config.waApiKey,

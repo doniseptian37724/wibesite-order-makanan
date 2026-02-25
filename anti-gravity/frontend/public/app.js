@@ -3495,8 +3495,11 @@ function triggerHaptic() {
 function updateUIStatus() {
   const greetingEl = document.querySelector(".hero-title");
   if (greetingEl) {
-    const name = state.customerName || "Sobat AG";
-    greetingEl.innerHTML = `${getDynamicGreeting()}, <br><span class="text-gradient">${name}</span>`;
+    if (state.customerName) {
+      greetingEl.innerHTML = `${getDynamicGreeting()}, <br><span class="text-gradient">${state.customerName}</span>`;
+    } else {
+      greetingEl.innerHTML = `Mau Makan Apa<br />Hari Ini? <span class="emoji-wave">🍔</span>`;
+    }
   }
 }
 

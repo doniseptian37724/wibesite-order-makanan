@@ -9,7 +9,7 @@ const createMenuSchema = {
     menu_price: { type: "number", minimum: 0 },
     menu_category: { type: "string", minLength: 2, maxLength: 50 },
     menu_description: { type: "string", maxLength: 500 },
-    menu_image_url: { type: "string", format: "uri" },
+    menu_image_url: { type: "string" },
     menu_is_available: { type: "boolean" },
   },
 };
@@ -21,7 +21,7 @@ const updateMenuSchema = {
     menu_price: { type: "number", minimum: 0 },
     menu_category: { type: "string", minLength: 2, maxLength: 50 },
     menu_description: { type: "string", maxLength: 500 },
-    menu_image_url: { type: "string", format: "uri" },
+    menu_image_url: { type: "string" },
     menu_is_available: { type: "boolean" },
   },
   minProperties: 1,

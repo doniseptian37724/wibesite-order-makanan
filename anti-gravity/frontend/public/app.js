@@ -206,6 +206,7 @@ const DOM = {
   editImgPreview: $("#edit-img-preview"),
   editName: $("#edit-name"),
   editPrice: $("#edit-price"),
+  editCategory: $("#edit-category"),
   editDesc: $("#edit-desc"),
   saveEditBtn: $("#save-edit-btn"),
   deleteMenuBtn: $("#delete-menu-btn"),
@@ -1432,6 +1433,7 @@ function openAddMenuModal() {
   DOM.editModalTitle.innerHTML = '<i class="fas fa-plus"></i> Tambah Menu Baru';
   DOM.editName.value = "";
   DOM.editPrice.value = "";
+  DOM.editCategory.value = "Makanan";
   DOM.editDesc.value = "";
   DOM.editImgPreview.style.backgroundImage = "";
   DOM.editModal.style.display = "flex";
@@ -1445,6 +1447,7 @@ function openEditModal() {
   DOM.editModalTitle.innerHTML = '<i class="fas fa-pen"></i> Edit Menu';
   DOM.editName.value = state.detailMenu.menu_name;
   DOM.editPrice.value = state.detailMenu.menu_price;
+  DOM.editCategory.value = state.detailMenu.menu_category || "Makanan";
   DOM.editDesc.value = state.detailMenu.menu_description || "";
   DOM.editImgPreview.style.backgroundImage = `url(${state.detailMenu.menu_image_url})`;
   DOM.deleteMenuBtn.style.display = "block";
@@ -1486,6 +1489,7 @@ async function handleSaveEdit() {
   let menuData = {
     menu_name: name,
     menu_price: price,
+    menu_category: DOM.editCategory.value,
     menu_description: desc,
     menu_image_url:
       imageUrl ||

@@ -1747,6 +1747,8 @@ function sendWhatsAppOrder() {
       promo: state.activePromo ? state.activePromo.code : null,
       paymentMethod: state.paymentMethod,
       notes,
+      address,
+      mapsLink,
       table: state.tableNumber,
       serviceType: state.serviceType,
       date: new Date().toISOString(),
@@ -3202,6 +3204,12 @@ async function syncOrderToServer(orderData) {
     }
     if (orderData.serviceType === "take-away") {
       payload.order_notes = `[BAWA PULANG] ` + payload.order_notes;
+    }
+    if (orderData.address) {
+      payload.order_notes += `\n📍 Alamat: ${orderData.address}`;
+    }
+    if (orderData.mapsLink) {
+      payload.order_notes += `\n📌 Maps: ${orderData.mapsLink}`;
     }
 
     const res = await fetch(`${CONFIG.API_BASE}/orders`, {
